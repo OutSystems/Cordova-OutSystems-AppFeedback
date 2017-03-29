@@ -22,6 +22,7 @@ typedef void (^OSECTProviderAPIBlock)(BOOL result);
 -(OSECTAppInfo*)getECTAppInfo;
 
 -(void)getApplicationInfo:(OSECTProviderAPIBlock)completionBlock;
+-(void)getCurrentAPIVersion:(OSECTProviderAPIBlock)completionBlock;
 -(void)isAppFeedbackAvailable:(OSECTProviderAPIBlock)completionBlock;
 -(void)submitFeedback:(OSECTProviderAPIBlock)completionBlock;
 
