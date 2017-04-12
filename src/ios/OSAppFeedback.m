@@ -130,9 +130,9 @@ NSString* const kAppFeedbackDefaultHandler = @"DefaultAppFeedbackHandler";
     }
     
     self.hasSettings = YES;
-    [self.commandDelegate runInBackground:^{
-        [self handleIsECTAvailable:command];
-    }];
+    
+    [self handleIsECTAvailable:command];
+   
 }
 
 - (void)openECT:(CDVInvokedUrlCommand*)command{
