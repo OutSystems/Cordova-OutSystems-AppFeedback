@@ -326,21 +326,24 @@ typedef void(^OSECTAvailabilityBlock)(BOOL);
 
 -(void)handleOpenGesture:(UILongPressGestureRecognizer*) gestureRecognizer {
     if([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
-
-        [self checkECTAvailability:^(BOOL result){
-            if(result){
-                [self handleOpenECT:nil];
-            }
-            else {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Can't send feedback"
-                                                                message:@"Make sure your device has internet connection and try again."
-                                                               delegate:nil
-                                                      cancelButtonTitle:@"OK"
-                                                      otherButtonTitles:nil, nil];
-                
-                [alert show];
-            }
-        }];
+        
+        if ([[CDVReachability reachabilityForInternetConnection]currentReachabilityStatus] != NotReachable){
+            [self checkECTAvailability:^(BOOL result){
+                if(result){
+                    [self handleOpenECT:nil];
+                }
+            }];
+        }
+        else{
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Can't send feedback"
+                                                            message:@"Make sure your device has internet connection and try again."
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil, nil];
+            
+            [alert show];
+        }
+        
     }
 }
 
