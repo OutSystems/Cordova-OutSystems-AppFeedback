@@ -87,8 +87,21 @@ public class OSAppFeedbackListener implements OSECTContainerListener {
             @Override
             public void execute(boolean result) {
                 appFeedbackAvailable = result;
-                if(apiHandler != null){
+                if(result && apiHandler != null){
                     apiHandler.execute(result);
+                }
+                else{
+                    AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                    alert.setTitle("Can't send feedback");
+                    alert.setMessage("Make sure your device has internet connection and try again.");
+                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    alert.show();
                 }
             }
         });
