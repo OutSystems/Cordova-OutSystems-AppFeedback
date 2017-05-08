@@ -331,6 +331,15 @@ typedef void(^OSECTAvailabilityBlock)(BOOL);
             if(result){
                 [self handleOpenECT:nil];
             }
+            else {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Can't send feedback"
+                                                                message:@"Make sure your device has internet connection and try again."
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"OK"
+                                                      otherButtonTitles:nil, nil];
+                
+                [alert show];
+            }
         }];
     }
 }
