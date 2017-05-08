@@ -3,6 +3,8 @@ package com.outsystems.plugins.appfeedback;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.webkit.WebView;
@@ -82,13 +84,20 @@ public class OSAppFeedbackListener implements OSECTContainerListener {
         });
     }
 
+    private boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
     public void handleECTAvailable(final OSECTProviderAPIHandler apiHandler) {
         mobileECTController.checkECTAvailability(new OSECTProviderAPIHandler() {
             @Override
             public void execute(boolean result) {
-                appFeedbackAvailable = result;
-                if(result && apiHandler != null){
-                    apiHandler.execute(result);
+                if(isNetworkAvailable(context)){
+                    appFeedbackAvailable = result;
+                    if(apiHandler != null)
+                        apiHandler.execute(result);
                 }
                 else{
                     AlertDialog.Builder alert = new AlertDialog.Builder(context);
