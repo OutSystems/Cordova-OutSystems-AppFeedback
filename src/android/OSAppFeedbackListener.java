@@ -93,31 +93,29 @@ public class OSAppFeedbackListener implements OSECTContainerListener {
     }
 
     public void handleECTAvailable(final OSECTProviderAPIHandler apiHandler) {
-        mobileECTController.checkECTAvailability(new OSECTProviderAPIHandler() {
-            @Override
-            public void execute(boolean result) {
-                if(isNetworkAvailable(context)){
+        if(isNetworkAvailable(context)) {
+            mobileECTController.checkECTAvailability(new OSECTProviderAPIHandler() {
+                @Override
+                public void execute(boolean result) {
                     appFeedbackAvailable = result;
                     if(apiHandler != null)
                         apiHandler.execute(result);
                 }
-                else{
-                    AlertDialog.Builder alert = new AlertDialog.Builder(context);
-                    alert.setTitle("Can't send feedback");
-                    alert.setMessage("Make sure your device has internet connection and try again.");
-                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-
-                    alert.show();
+            });
+        } else {
+            AlertDialog.Builder alert = new AlertDialog.Builder(context);
+            alert.setTitle("Can't send feedback");
+            alert.setMessage("Make sure your device has internet connection and try again.");
+            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
                 }
-            }
-        });
-    }
+            });
 
+            alert.show();
+        }
+    }
 
     public void handleOpenECT(final OSECTProviderAPIHandler apiHandler) {
         if (this.isAppFeedbackAvailable()) {
