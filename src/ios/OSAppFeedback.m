@@ -6,6 +6,7 @@
 //
 
 #import "OSAppFeedback.h"
+#import "CDVReachability.h"
 #import "YoikScreenOrientation.h"
 
 NSString* const kAppFeedbackDefaultHostname = @"DefaultHostname";
