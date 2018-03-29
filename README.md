@@ -9,3 +9,6 @@ OutSystems App Feedback will allow customers to collect users' feedback from the
 - iOS
 - Android
 
+## How to Deploy
+
+Test your features in branch `MASTER` and then merge to branch `010P5`
