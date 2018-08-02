@@ -65,7 +65,7 @@
         <source-file src="src/ios/OSAppFeedback.m"/>
 
       <!-- App Feedback framework -->
-     <framework src="src/ios/MobileECT/OutSystemsMobileECT.framework" custom="true" />
+     <framework src="src/ios/MobileECT/OutSystemsMobileECT.framework" custom="true" embed="true"/>
      <resource-file src="src/ios/MobileECT/OutSystemsMobileECT.bundle"/>
 
     </platform>
