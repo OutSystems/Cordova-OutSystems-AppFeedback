@@ -68,6 +68,8 @@
      <framework src="src/ios/MobileECT/OutSystemsMobileECT.framework" custom="true" embed="true"/>
      <resource-file src="src/ios/MobileECT/OutSystemsMobileECT.bundle"/>
 
+     <hook type="before_build" src="hooks/ios/embed_framework.js" />
+     
     </platform>
 
 
