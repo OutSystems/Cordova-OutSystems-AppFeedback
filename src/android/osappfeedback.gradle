@@ -1,7 +1,7 @@
 repositories{    
   jcenter()
   flatDir{
-      dirs 'MobileECT'
+      dirs 'libs','src/main/libs'
    }
 }
 
