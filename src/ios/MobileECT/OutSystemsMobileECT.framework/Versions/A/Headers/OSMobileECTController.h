@@ -18,7 +18,7 @@
 
 @property (strong, nonatomic) NSString* hostname;
 
--(id)initWithSuperView:(UIView*)view andWebView:(UIWebView*)web forHostname:(NSString*)host;
+-(id)initWithSuperView:(UIView*)view andWebView:(UIView*)web forHostname:(NSString*)host;
 
 -(void)prepareForViewDidLoad;
 -(void)prepareForViewWillAppear;

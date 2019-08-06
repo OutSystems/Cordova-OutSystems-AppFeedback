@@ -17,7 +17,7 @@ typedef void (^OSECTProviderAPIBlock)(BOOL result);
 
 @interface OSECTProviderAPI : NSObject
 
--(id)initWithWebView:(UIWebView*)web forHostname:(NSString*)host;
+-(id)initWithWebView:(UIView*)web forHostname:(NSString*)host;
 
 -(OSECTAppInfo*)getECTAppInfo;
 
