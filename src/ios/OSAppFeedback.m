@@ -255,11 +255,9 @@ typedef void(^OSECTAvailabilityBlock)(BOOL);
 
 
 -(void) initEctController:(NSString*) hostname {
-    UIWebView *webView = (UIWebView*)self.webViewEngine;
-    
     // Mobile ECT Configuration
     self.mobileECTController = [[OSMobileECTController alloc] initWithSuperView:_mobileECTView
-                                                                     andWebView:webView
+                                                                     andWebView:self.webView
                                                                     forHostname:_hostname ];
     
     [self.mobileECTController addOnExitEvent:self withSelector:@selector(onExitECT)];
