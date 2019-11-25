@@ -253,8 +253,8 @@ public class OSAppFeedback extends CordovaPlugin {
                         if(gestureEvent != null) {
                             Map<String, String> eventData = gestureEvent.getData();
                             if(eventData != null) {
-                                if(eventData.get(Constants.GESTURE_TYPE).equals(Constants.GESTURE_LONG_PRESS) &&
-                                        eventData.get(Constants.GESTURE_NUMBER_FINGERS).equals(Constants.GESTURE_TWO_FINGERS)) {
+                                if(Constants.GESTURE_LONG_PRESS.equals(eventData.get(Constants.GESTURE_TYPE)) &&
+                                        Constants.GESTURE_TWO_FINGERS.equals(eventData.get(Constants.GESTURE_NUMBER_FINGERS))) {
                                     cordovaActivity.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
