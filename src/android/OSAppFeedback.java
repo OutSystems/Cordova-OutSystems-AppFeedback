@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.outsystems.android.mobileect.api.interfaces.OSECTProviderAPIHandler;
-import com.outsystems.plugins.broadcaster.constants.Constants;
 import com.outsystems.plugins.broadcaster.interfaces.Event;
 
 import org.apache.cordova.CallbackContext;
@@ -34,6 +33,18 @@ public class OSAppFeedback extends CordovaPlugin {
 
     private static final String DEFAULT_HOSTNAME = "DefaultHostname";
     private static final String DEFAULT_HANDLER = "DefaultAppFeedbackHandler";
+
+    // These constants match the ones defined in the Broadcaster plugin
+    // They are intended to use for MABS 6 only
+    // If any of these changes on Broadcaster plugin it should be reflected here
+    private static final String GESTURE_EVENT = "gestureEvent";
+    private static final String GESTURE_TYPE = "gestureType";
+    private static final String GESTURE_TAP = "gestureTap";
+    private static final String GESTURE_LONG_PRESS = "gestureLongPress";
+    private static final String GESTURE_NUMBER_FINGERS = "gestureNumberFingers";
+    private static final String GESTURE_ONE_FINGER = "1";
+    private static final String GESTURE_TWO_FINGERS = "2";
+    private static final String GESTURE_THREE_FINGERS = "3";
 
     private OSAppFeedbackListener appFeedbackListener;
 
@@ -249,12 +260,12 @@ public class OSAppFeedback extends CordovaPlugin {
                 public void onReceive(Context context, Intent intent) {
                     Bundle extras = intent.getExtras();
                     if(extras != null) {
-                        Event gestureEvent = extras.getParcelable(Constants.GESTURE_EVENT);
+                        Event gestureEvent = extras.getParcelable(GESTURE_EVENT);
                         if(gestureEvent != null) {
                             Map<String, String> eventData = gestureEvent.getData();
                             if(eventData != null) {
-                                if(Constants.GESTURE_LONG_PRESS.equals(eventData.get(Constants.GESTURE_TYPE)) &&
-                                        Constants.GESTURE_TWO_FINGERS.equals(eventData.get(Constants.GESTURE_NUMBER_FINGERS))) {
+                                if(GESTURE_LONG_PRESS.equals(eventData.get(GESTURE_TYPE)) &&
+                                        GESTURE_TWO_FINGERS.equals(eventData.get(GESTURE_NUMBER_FINGERS))) {
                                     cordovaActivity.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
@@ -275,7 +286,7 @@ public class OSAppFeedback extends CordovaPlugin {
                 }
             };
 
-            LocalBroadcastManager.getInstance(this.cordova.getActivity().getApplicationContext()).registerReceiver(broadcastReceiver, new IntentFilter(Constants.GESTURE_EVENT));
+            LocalBroadcastManager.getInstance(this.cordova.getActivity().getApplicationContext()).registerReceiver(broadcastReceiver, new IntentFilter(GESTURE_EVENT));
         }
         else {
             webView.getView().setOnTouchListener(new View.OnTouchListener() {
