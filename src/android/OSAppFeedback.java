@@ -1,5 +1,6 @@
 package com.outsystems.plugins.appfeedback;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -50,6 +51,7 @@ public class OSAppFeedback extends CordovaPlugin {
 
     private ViewGroup mainViewGroup;
     private ViewGroup ectViewGroup;
+    private BroadcastReceiver broadcastReceiver;
     private boolean inBackground;
     private String defaultHostname;
 
@@ -119,9 +121,27 @@ public class OSAppFeedback extends CordovaPlugin {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        final Activity activity = this.cordova.getActivity();
+        if(activity.getApplicationInfo().targetSdkVersion >= 29) {
+            LocalBroadcastManager.getInstance(activity.getApplicationContext()).registerReceiver(this.broadcastReceiver, new IntentFilter(GESTURE_EVENT));
+        }
+    }
+
+    @Override
     public void onPause(boolean multitasking) {
         super.onPause(multitasking);
         inBackground = true;
+    }
+
+    @Override
+    public void onStop() {
+        final Activity activity = this.cordova.getActivity();
+        if(activity.getApplicationInfo().targetSdkVersion >= 29) {
+            LocalBroadcastManager.getInstance(activity.getApplicationContext()).unregisterReceiver(this.broadcastReceiver);
+        }
+        super.onStop();
     }
 
     @Override
@@ -255,7 +275,7 @@ public class OSAppFeedback extends CordovaPlugin {
         final CordovaActivity cordovaActivity = (CordovaActivity) cordova.getActivity();
 
         if(cordovaActivity.getApplicationInfo().targetSdkVersion >= 29) {
-            BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+            this.broadcastReceiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     Bundle extras = intent.getExtras();
@@ -285,8 +305,6 @@ public class OSAppFeedback extends CordovaPlugin {
                     }
                 }
             };
-
-            LocalBroadcastManager.getInstance(this.cordova.getActivity().getApplicationContext()).registerReceiver(broadcastReceiver, new IntentFilter(GESTURE_EVENT));
         }
         else {
             webView.getView().setOnTouchListener(new View.OnTouchListener() {
