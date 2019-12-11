@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - Register/unregister receiver in proper lifecycle callbacks [RNMT-3515](https://outsystemsrd.atlassian.net/browse/RNMT-3515)
 
 ### Additions
+- Add support for DarkMode [RNMT-3629](https://outsystemsrd.atlassian.net/browse/RNMT-3629)
 - Opens ECT through broadcast gestures when targeting Android 10 and above [RNMT-3515](https://outsystemsrd.atlassian.net/browse/RNMT-3515)
 
 ## [2.3.0]
