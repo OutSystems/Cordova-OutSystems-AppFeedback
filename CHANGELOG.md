@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 
+## [2.4.2]
 ### Fixes
 - Navigation bar is now correctly positioned in Android devices with notch when using status bar overlay [RNMT-3663](https://outsystemsrd.atlassian.net/browse/RNMT-3663)
 - Navigation bar no longer has an incorrect size in Android 4.4 devices when using status bar overlay [RNMT-3663](https://outsystemsrd.atlassian.net/browse/RNMT-3663)
@@ -26,7 +27,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Additions
 - Adds support for WKWebView [RNMT-2573](https://outsystemsrd.atlassian.net/browse/RNMT-2573)
 
-[Unreleased]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.4.1...HEAD
+[Unreleased]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.4.2...HEAD
+[2.4.2]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.4.1...2.4.2
 [2.4.1]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.4.0...2.4.1
 [2.4.0]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.3.0...2.4.0
 [2.3.0]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.2.1...2.3.0
