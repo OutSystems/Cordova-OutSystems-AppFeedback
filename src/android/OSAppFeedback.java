@@ -98,6 +98,7 @@ public class OSAppFeedback extends CordovaPlugin {
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
                 ectViewGroup.setLayoutParams(params);
                 ectViewGroup.setId(2001);
+                ectViewGroup.setFitsSystemWindows(true);
                 ectViewGroup.setVisibility(View.GONE);
 
                 rootView.addView(ectViewGroup);

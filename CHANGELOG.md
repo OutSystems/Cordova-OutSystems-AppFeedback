@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 
+### Fixes
+- Navigation bar is now correctly positioned in Android devices with notch when using status bar overlay [RNMT-3663](https://outsystemsrd.atlassian.net/browse/RNMT-3663)
+- Navigation bar no longer has an incorrect size in Android 4.4 devices when using status bar overlay [RNMT-3663](https://outsystemsrd.atlassian.net/browse/RNMT-3663)
+- View is now correctly panned/resized in Android when keyboard is visible [RNMT-3664](https://outsystemsrd.atlassian.net/browse/RNMT-3664)
+
 ## [2.4.1]
 ### Fixes
 - Fixes and issue that was preventing successfull builds with older versions than MABS 6.0 [RNMT-3696](https://outsystemsrd.atlassian.net/browse/RNMT-3696)
