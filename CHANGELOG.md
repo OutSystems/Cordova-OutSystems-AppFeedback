@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixes
+- Fixes and issue that was preventing audio recording in Android 10 devices [RNMT-3763](https://outsystemsrd.atlassian.net/browse/RNMT-3763)
 
 ## [2.4.2]
 ### Fixes
