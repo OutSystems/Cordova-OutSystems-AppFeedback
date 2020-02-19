@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [2.4.3]
 ### Fixes
 - Fixes and issue that was preventing audio recording in Android 10 devices [RNMT-3763](https://outsystemsrd.atlassian.net/browse/RNMT-3763)
 
@@ -29,7 +31,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Additions
 - Adds support for WKWebView [RNMT-2573](https://outsystemsrd.atlassian.net/browse/RNMT-2573)
 
-[Unreleased]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.4.2...HEAD
+[Unreleased]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.4.3...HEAD
+[2.4.3]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.4.2...2.4.3
 [2.4.2]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.4.1...2.4.2
 [2.4.1]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.4.0...2.4.1
 [2.4.0]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.3.0...2.4.0
