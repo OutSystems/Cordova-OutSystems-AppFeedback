@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixes
+- Fixes an issue that was changing the application orientation lock on closing AppFeedback [RNMT-4290](https://outsystemsrd.atlassian.net/browse/RNMT-4290)
 
 ## [2.4.3]
 ### Fixes
