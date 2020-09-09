@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [2.4.4]
 ### Fixes
 - Fixes an issue that was changing the application orientation lock on closing AppFeedback [RNMT-4290](https://outsystemsrd.atlassian.net/browse/RNMT-4290)
 
@@ -33,7 +35,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Additions
 - Adds support for WKWebView [RNMT-2573](https://outsystemsrd.atlassian.net/browse/RNMT-2573)
 
-[Unreleased]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.4.3...HEAD
+[Unreleased]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.4.4...HEAD
+[2.4.4]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.4.3...2.4.4
 [2.4.3]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.4.2...2.4.3
 [2.4.2]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.4.1...2.4.2
 [2.4.1]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.4.0...2.4.1
