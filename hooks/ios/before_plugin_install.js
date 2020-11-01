@@ -1,5 +1,5 @@
 module.exports = function (context) {
-    var fs = context.requireCordovaModule("fs");
+    var fs = require("fs");
     var linkPath = "plugins/com.outsystems.plugins.appfeedback/src/ios/MobileECT/OutSystemsMobileECT.framework/";
     var targetPath = "Versions/A/";
 
