@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## Changes
+- Update gradle to stop using the recently removed keyword 'compile' [RNMT-5055](https://outsystemsrd.atlassian.net/browse/RNMT-5055)
 ## Fixes
 - Update hooks to be compatible with Cordova CLI 10 [RNMT-4364](https://outsystemsrd.atlassian.net/browse/RNMT-4364)
 
