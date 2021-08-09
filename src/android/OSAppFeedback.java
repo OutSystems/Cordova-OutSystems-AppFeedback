@@ -311,7 +311,7 @@ public class OSAppFeedback extends CordovaPlugin {
             webView.getView().setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    int action = MotionEventCompat.getActionMasked(event);
+                    int action = event.getActionMasked();
 
                     if(event.getPointerCount() == 2) {
                         switch (action) {
