@@ -6,7 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.webkit.WebView;
@@ -87,9 +88,15 @@ public class OSAppFeedbackListener implements OSECTContainerListener {
     }
 
     private boolean isNetworkAvailable(Context context) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        Network nw = connectivityManager.getActiveNetwork();
+        if (nw == null) {
+            return false;
+        }
+        NetworkCapabilities actNw = connectivityManager.getNetworkCapabilities(nw);
+        return actNw != null && (actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH));
+    
     }
 
     public void handleECTAvailable(final OSECTProviderAPIHandler apiHandler) {
