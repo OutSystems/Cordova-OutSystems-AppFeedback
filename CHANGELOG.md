@@ -4,9 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [2.5.0]
 ## Changes
 - Update gradle to stop using the recently removed keyword 'compile' [RNMT-5055](https://outsystemsrd.atlassian.net/browse/RNMT-5055)
-## Fixes
+
+## [2.4.5]
+### Fixes
 - Update hooks to be compatible with Cordova CLI 10 [RNMT-4364](https://outsystemsrd.atlassian.net/browse/RNMT-4364)
 
 ## [2.4.4]
@@ -39,7 +43,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Additions
 - Adds support for WKWebView [RNMT-2573](https://outsystemsrd.atlassian.net/browse/RNMT-2573)
 
-[Unreleased]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.4.4...HEAD
+[Unreleased]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.5.0...HEAD
+[2.5.0]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.4.5...2.5.0
+[2.4.5]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.4.4...2.4.5
 [2.4.4]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.4.3...2.4.4
 [2.4.3]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.4.2...2.4.3
 [2.4.2]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.4.1...2.4.2

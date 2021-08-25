@@ -1,6 +1,6 @@
 {
   "name": "com.outsystems.plugins.appfeedback",
-  "version": "2.4.4",
+  "version": "2.5.0",
   "description": "OutSystems App Feedback plugin for Cordova applications",
   "repository": {
     "type": "git",
