@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [2.6.0]
 ### Additions
 - Adds granular media permissions for Android 13 [RNMT-5590](https://outsystemsrd.atlassian.net/browse/RNMT-5590)
 
@@ -45,7 +46,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Additions
 - Adds support for WKWebView [RNMT-2573](https://outsystemsrd.atlassian.net/browse/RNMT-2573)
 
-[Unreleased]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.5.0...HEAD
+[Unreleased]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.6.0...HEAD
+[2.6.0]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.5.0...2.6.0
 [2.5.0]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.4.5...2.5.0
 [2.4.5]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.4.4...2.4.5
 [2.4.4]: https://github.com/OutSystems/Cordova-OutSystems-AppFeedback/compare/2.4.3...2.4.4
