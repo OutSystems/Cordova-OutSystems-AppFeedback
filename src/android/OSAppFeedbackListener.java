@@ -7,15 +7,14 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.outsystems.android.mobileect.MobileECTController;
 import com.outsystems.android.mobileect.api.interfaces.OSECTProviderAPIHandler;
 import com.outsystems.android.mobileect.interfaces.OSECTContainerListener;
-
-import org.apache.cordova.CallbackContext;
 
 public class OSAppFeedbackListener implements OSECTContainerListener {
 
@@ -28,7 +27,7 @@ public class OSAppFeedbackListener implements OSECTContainerListener {
 
     private Context context;
 
-    public OSAppFeedbackListener(Activity activity, ViewGroup mainViewGroup, ViewGroup ectViewGroup, WebView currentWebView, String hostname) {
+    public OSAppFeedbackListener(AppCompatActivity activity, ViewGroup mainViewGroup, ViewGroup ectViewGroup, WebView currentWebView, String hostname) {
 
         this.context = activity;
 
