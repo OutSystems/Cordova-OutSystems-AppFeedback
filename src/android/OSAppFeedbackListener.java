@@ -3,7 +3,6 @@ package com.outsystems.plugins.appfeedback;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -76,13 +75,8 @@ public class OSAppFeedbackListener implements OSECTContainerListener {
      * Public API for Plugin
      */
 
-    public void handleDeviceReady(){
-        this.mobileECTController.prepareECTData(new OSECTProviderAPIHandler() {
-            @Override
-            public void execute(boolean result) {
-                // Do Nothing
-            }
-        });
+    public void handleDeviceReady() {
+        this.mobileECTController.prepareECTData(result -> { /* Do Nothing */ });
     }
 
     private boolean isNetworkAvailable(Context context) {
@@ -92,26 +86,17 @@ public class OSAppFeedbackListener implements OSECTContainerListener {
     }
 
     public void handleECTAvailable(final OSECTProviderAPIHandler apiHandler) {
-        if(isNetworkAvailable(context)) {
-            mobileECTController.checkECTAvailability(new OSECTProviderAPIHandler() {
-                @Override
-                public void execute(boolean result) {
-                    appFeedbackAvailable = result;
-                    if(apiHandler != null)
-                        apiHandler.execute(result);
-                }
+        if (isNetworkAvailable(context)) {
+            mobileECTController.checkECTAvailability(result -> {
+                appFeedbackAvailable = result;
+                if (apiHandler != null)
+                    apiHandler.execute(result);
             });
         } else {
             AlertDialog.Builder alert = new AlertDialog.Builder(context);
             alert.setTitle("Can't send feedback");
             alert.setMessage("Make sure your device has internet connection and try again.");
-            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-
+            alert.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
             alert.show();
         }
     }

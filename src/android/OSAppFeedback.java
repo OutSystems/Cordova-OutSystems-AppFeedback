@@ -1,15 +1,12 @@
 package com.outsystems.plugins.appfeedback;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-
-import androidx.core.view.MotionEventCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +14,9 @@ import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.outsystems.android.mobileect.api.interfaces.OSECTProviderAPIHandler;
+import androidx.core.view.MotionEventCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.outsystems.plugins.broadcaster.interfaces.Event;
 
 import org.apache.cordova.CallbackContext;
@@ -74,47 +73,42 @@ public class OSAppFeedback extends CordovaPlugin {
     }
 
 
+    @SuppressLint("ResourceType")
     @Override
     protected void pluginInitialize() {
 
-        this.defaultHostname = preferences.getString(DEFAULT_HOSTNAME,null);
-        final boolean defautHandler = preferences.getBoolean(DEFAULT_HANDLER,true);
+        this.defaultHostname = preferences.getString(DEFAULT_HOSTNAME, null);
+        final boolean defautHandler = preferences.getBoolean(DEFAULT_HANDLER, true);
 
-        cordova.getActivity().runOnUiThread(new Runnable() {
-            @SuppressWarnings("ResourceType")
-            @Override
-            public void run() {
+        cordova.getActivity().runOnUiThread(() -> {
 
-                final CordovaActivity cordovaActivity = (CordovaActivity) cordova.getActivity();
+            final CordovaActivity cordovaActivity = (CordovaActivity) cordova.getActivity();
 
-                ViewGroup mainViewGroup = (ViewGroup) webView.getView().getParent();
+            ViewGroup mainViewGroup = (ViewGroup) webView.getView().getParent();
+            ViewGroup rootView = (ViewGroup) mainViewGroup.getParent();
 
-                ViewGroup rootView = (ViewGroup) mainViewGroup.getParent();
+            if (rootView instanceof LinearLayout) {
+                LinearLayout linearLayout = (LinearLayout) rootView;
+                linearLayout.setOrientation(LinearLayout.VERTICAL);
+            }
 
-                if (rootView instanceof LinearLayout) {
-                    LinearLayout linearLayout = (LinearLayout) rootView;
-                    linearLayout.setOrientation(LinearLayout.VERTICAL);
-                }
+            RelativeLayout ectViewGroup = new RelativeLayout(cordovaActivity);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+            ectViewGroup.setLayoutParams(params);
+            ectViewGroup.setId(2001);
+            ectViewGroup.setFitsSystemWindows(true);
+            ectViewGroup.setVisibility(View.GONE);
 
-                RelativeLayout ectViewGroup = new RelativeLayout(cordovaActivity);
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-                ectViewGroup.setLayoutParams(params);
-                ectViewGroup.setId(2001);
-                ectViewGroup.setFitsSystemWindows(true);
-                ectViewGroup.setVisibility(View.GONE);
+            rootView.addView(ectViewGroup);
+            rootView.invalidate();
 
-                rootView.addView(ectViewGroup);
-                rootView.invalidate();
+            setMainViewGroup(mainViewGroup);
+            setEctViewGroup(ectViewGroup);
 
-                setMainViewGroup(mainViewGroup);
-                setEctViewGroup(ectViewGroup);
-
-                if(defautHandler){
-                    registerGestureHandler();
-                }
+            if (defautHandler) {
+                registerGestureHandler();
             }
         });
-
     }
 
     @Override
@@ -188,49 +182,28 @@ public class OSAppFeedback extends CordovaPlugin {
 
         appFeedbackListener = new OSAppFeedbackListener(cordova.getActivity(), mainViewGroup, ectViewGroup, currentWebView, hostname);
 
-        cordova.getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                appFeedbackListener.handleDeviceReady();
-            }
-        });
+        cordova.getActivity().runOnUiThread(() -> appFeedbackListener.handleDeviceReady());
 
     }
 
     private void handleIsECTAvailable(final CallbackContext callbackContext) {
-        cordova.getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                appFeedbackListener.handleECTAvailable(new OSECTProviderAPIHandler() {
-                    @Override
-                    public void execute(boolean result) {
-                        if (result) {
-                            callbackContext.success(1);
-                        } else {
-                            callbackContext.error("App Feedback is not available.");
-                        }
-                    }
-                });
+        cordova.getActivity().runOnUiThread(() -> appFeedbackListener.handleECTAvailable(result -> {
+            if (result) {
+                callbackContext.success(1);
+            } else {
+                callbackContext.error("App Feedback is not available.");
             }
-        });
+        }));
     }
 
     private void handleOpenECT(final CallbackContext callbackContext) {
-        cordova.getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                appFeedbackListener.handleOpenECT(new OSECTProviderAPIHandler() {
-                    @Override
-                    public void execute(boolean result) {
-                        if (result) {
-                            callbackContext.success(1);
-                        } else {
-                            callbackContext.error("App Feedback is not available.");
-                        }
-                    }
-                });
+        cordova.getActivity().runOnUiThread(() -> appFeedbackListener.handleOpenECT(result -> {
+            if (result) {
+                callbackContext.success(1);
+            } else {
+                callbackContext.error("App Feedback is not available.");
             }
-        });
+        }));
     }
 
     /**
@@ -251,97 +224,74 @@ public class OSAppFeedback extends CordovaPlugin {
 
         @Override
         public void run() {
-
             final CordovaActivity activity = hRef.get();
-
             if (activity == null)
                 return;
 
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    appFeedbackListener.handleECTAvailable(new OSECTProviderAPIHandler() {
-                        @Override
-                        public void execute(boolean result) {
-                            if(result) {
-                                appFeedbackListener.handleOpenECT(null);
-                            }
-                        }
-                    });
+            activity.runOnUiThread(() -> appFeedbackListener.handleECTAvailable(result -> {
+                if (result) {
+                    appFeedbackListener.handleOpenECT(null);
                 }
-            });
+            }));
 
         }
     }
 
-    private void registerGestureHandler(){
+    private void registerGestureHandler() {
         final CordovaActivity cordovaActivity = (CordovaActivity) cordova.getActivity();
 
-        if(cordovaActivity.getApplicationInfo().targetSdkVersion >= 29) {
+        if (cordovaActivity.getApplicationInfo().targetSdkVersion >= 29) {
             this.broadcastReceiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     Bundle extras = intent.getExtras();
-                    if(extras != null) {
+                    if (extras != null) {
                         Event gestureEvent = extras.getParcelable(GESTURE_EVENT);
-                        if(gestureEvent != null) {
+                        if (gestureEvent != null) {
                             Map<String, String> eventData = gestureEvent.getData();
-                            if(eventData != null) {
-                                if(GESTURE_LONG_PRESS.equals(eventData.get(GESTURE_TYPE)) &&
+                            if (eventData != null) {
+                                if (GESTURE_LONG_PRESS.equals(eventData.get(GESTURE_TYPE)) &&
                                         GESTURE_TWO_FINGERS.equals(eventData.get(GESTURE_NUMBER_FINGERS))) {
-                                    cordovaActivity.runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            appFeedbackListener.handleECTAvailable(new OSECTProviderAPIHandler() {
-                                                @Override
-                                                public void execute(boolean result) {
-                                                    if(result) {
-                                                        appFeedbackListener.handleOpenECT(null);
-                                                    }
-                                                }
-                                            });
+                                    cordovaActivity.runOnUiThread(() -> appFeedbackListener.handleECTAvailable(result -> {
+                                        if (result) {
+                                            appFeedbackListener.handleOpenECT(null);
                                         }
-                                    });
+                                    }));
                                 }
                             }
                         }
                     }
                 }
             };
-        }
-        else {
-            webView.getView().setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    int action = MotionEventCompat.getActionMasked(event);
+        } else {
+            webView.getView().setOnTouchListener((v, event) -> {
+                int action = MotionEventCompat.getActionMasked(event);
 
-                    if(event.getPointerCount() == 2) {
-                        switch (action) {
-                            case MotionEvent.ACTION_POINTER_DOWN:
-                                mSecondFingerTimeDown = System.currentTimeMillis();
-                                mGestureRecognizerTimer = new Timer();
-                                mGestureRecognizerTimer.schedule(new GestureRecognizerTimedTask(cordovaActivity), INTERVAL_TO_SHOW_MENU);
-                                break;
-                            case MotionEvent.ACTION_POINTER_UP:
-                                if ((System.currentTimeMillis() - mSecondFingerTimeDown) <= INTERVAL_TO_SHOW_MENU) {
-                                    mGestureRecognizerTimer.cancel();
-                                }
-                                if ((System.currentTimeMillis() - mSecondFingerTimeDown) >= INTERVAL_TO_SHOW_MENU) {
-                                    mSecondFingerTimeDown = 0;
-                                }
-                                break;
-                        }
-
-                    }
-                    else{
-                        if(mGestureRecognizerTimer != null){
-                            mGestureRecognizerTimer.cancel();
-                        }
-                        mSecondFingerTimeDown = 0;
+                if (event.getPointerCount() == 2) {
+                    switch (action) {
+                        case MotionEvent.ACTION_POINTER_DOWN:
+                            mSecondFingerTimeDown = System.currentTimeMillis();
+                            mGestureRecognizerTimer = new Timer();
+                            mGestureRecognizerTimer.schedule(new GestureRecognizerTimedTask(cordovaActivity), INTERVAL_TO_SHOW_MENU);
+                            break;
+                        case MotionEvent.ACTION_POINTER_UP:
+                            if ((System.currentTimeMillis() - mSecondFingerTimeDown) <= INTERVAL_TO_SHOW_MENU) {
+                                mGestureRecognizerTimer.cancel();
+                            }
+                            if ((System.currentTimeMillis() - mSecondFingerTimeDown) >= INTERVAL_TO_SHOW_MENU) {
+                                mSecondFingerTimeDown = 0;
+                            }
+                            break;
                     }
 
-                    return webView.getView().onTouchEvent(event);
+                } else {
+                    if (mGestureRecognizerTimer != null) {
+                        mGestureRecognizerTimer.cancel();
+                    }
+                    mSecondFingerTimeDown = 0;
                 }
+
+                return webView.getView().onTouchEvent(event);
             });
         }
 
