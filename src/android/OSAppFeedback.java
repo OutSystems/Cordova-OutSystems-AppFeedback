@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
@@ -25,10 +24,7 @@ import org.apache.cordova.engine.SystemWebViewEngine;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.lang.ref.WeakReference;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class OSAppFeedback extends CordovaPlugin {
 
@@ -48,29 +44,19 @@ public class OSAppFeedback extends CordovaPlugin {
     private static final String GESTURE_THREE_FINGERS = "3";
 
     private OSAppFeedbackListener appFeedbackListener;
-
     private ViewGroup mainViewGroup;
     private ViewGroup ectViewGroup;
     private BroadcastReceiver broadcastReceiver;
     private boolean inBackground;
     private String defaultHostname;
 
-    protected ViewGroup getMainViewGroup() {
-        return mainViewGroup;
-    }
-
     protected void setMainViewGroup(ViewGroup mainViewGroup) {
         this.mainViewGroup = mainViewGroup;
-    }
-
-    protected ViewGroup getEctViewGroup() {
-        return ectViewGroup;
     }
 
     protected void setEctViewGroup(ViewGroup ectViewGroup) {
         this.ectViewGroup = ectViewGroup;
     }
-
 
     @SuppressLint("ResourceType")
     @Override
@@ -120,9 +106,7 @@ public class OSAppFeedback extends CordovaPlugin {
     public void onStart() {
         super.onStart();
         final Activity activity = this.cordova.getActivity();
-        if (activity.getApplicationInfo().targetSdkVersion >= 29) {
-            LocalBroadcastManager.getInstance(activity.getApplicationContext()).registerReceiver(this.broadcastReceiver, new IntentFilter(GESTURE_EVENT));
-        }
+        LocalBroadcastManager.getInstance(activity.getApplicationContext()).registerReceiver(this.broadcastReceiver, new IntentFilter(GESTURE_EVENT));
     }
 
     @Override
@@ -134,9 +118,7 @@ public class OSAppFeedback extends CordovaPlugin {
     @Override
     public void onStop() {
         final Activity activity = this.cordova.getActivity();
-        if (activity.getApplicationInfo().targetSdkVersion >= 29) {
-            LocalBroadcastManager.getInstance(activity.getApplicationContext()).unregisterReceiver(this.broadcastReceiver);
-        }
+        LocalBroadcastManager.getInstance(activity.getApplicationContext()).unregisterReceiver(this.broadcastReceiver);
         super.onStop();
     }
 
@@ -172,9 +154,7 @@ public class OSAppFeedback extends CordovaPlugin {
         WebView currentWebView = (WebView) webViewEngine.getView();
 
         appFeedbackListener = new OSAppFeedbackListener(cordova.getActivity(), mainViewGroup, ectViewGroup, currentWebView, hostname);
-
         cordova.getActivity().runOnUiThread(() -> appFeedbackListener.handleDeviceReady());
-
     }
 
     private void handleIsECTAvailable(final CallbackContext callbackContext) {
@@ -197,93 +177,30 @@ public class OSAppFeedback extends CordovaPlugin {
         }));
     }
 
-    /**
-     * Gesture Detector
-     */
-
-    private long mSecondFingerTimeDown = 0;
-    private Timer mGestureRecognizerTimer;
-    private static final int INTERVAL_TO_SHOW_MENU = 600;
-
-    private class GestureRecognizerTimedTask extends TimerTask {
-
-        WeakReference<CordovaActivity> hRef;
-
-        public GestureRecognizerTimedTask(CordovaActivity activity) {
-            hRef = new WeakReference<>(activity);
-        }
-
-        @Override
-        public void run() {
-            final CordovaActivity activity = hRef.get();
-            if (activity == null)
-                return;
-
-            activity.runOnUiThread(() -> appFeedbackListener.handleECTAvailable(result -> {
-                if (result) {
-                    appFeedbackListener.handleOpenECT(null);
-                }
-            }));
-
-        }
-    }
-
     private void registerGestureHandler() {
         final CordovaActivity cordovaActivity = (CordovaActivity) cordova.getActivity();
 
-        if (cordovaActivity.getApplicationInfo().targetSdkVersion >= 29) {
-            this.broadcastReceiver = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    Bundle extras = intent.getExtras();
-                    if (extras != null) {
-                        Event gestureEvent = extras.getParcelable(GESTURE_EVENT);
-                        if (gestureEvent != null) {
-                            Map<String, String> eventData = gestureEvent.getData();
-                            if (eventData != null) {
-                                if (GESTURE_LONG_PRESS.equals(eventData.get(GESTURE_TYPE)) &&
-                                        GESTURE_TWO_FINGERS.equals(eventData.get(GESTURE_NUMBER_FINGERS))) {
-                                    cordovaActivity.runOnUiThread(() -> appFeedbackListener.handleECTAvailable(result -> {
-                                        if (result) {
-                                            appFeedbackListener.handleOpenECT(null);
-                                        }
-                                    }));
-                                }
+        this.broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Bundle extras = intent.getExtras();
+                if (extras != null) {
+                    Event gestureEvent = extras.getParcelable(GESTURE_EVENT);
+                    if (gestureEvent != null) {
+                        Map<String, String> eventData = gestureEvent.getData();
+                        if (eventData != null) {
+                            if (GESTURE_LONG_PRESS.equals(eventData.get(GESTURE_TYPE)) &&
+                                    GESTURE_TWO_FINGERS.equals(eventData.get(GESTURE_NUMBER_FINGERS))) {
+                                cordovaActivity.runOnUiThread(() -> appFeedbackListener.handleECTAvailable(result -> {
+                                    if (result) {
+                                        appFeedbackListener.handleOpenECT(null);
+                                    }
+                                }));
                             }
                         }
                     }
                 }
-            };
-        } else {
-            webView.getView().setOnTouchListener((v, event) -> {
-                int action = event.getActionMasked();
-
-                if (event.getPointerCount() == 2) {
-                    switch (action) {
-                        case MotionEvent.ACTION_POINTER_DOWN:
-                            mSecondFingerTimeDown = System.currentTimeMillis();
-                            mGestureRecognizerTimer = new Timer();
-                            mGestureRecognizerTimer.schedule(new GestureRecognizerTimedTask(cordovaActivity), INTERVAL_TO_SHOW_MENU);
-                            break;
-                        case MotionEvent.ACTION_POINTER_UP:
-                            if ((System.currentTimeMillis() - mSecondFingerTimeDown) <= INTERVAL_TO_SHOW_MENU) {
-                                mGestureRecognizerTimer.cancel();
-                            }
-                            if ((System.currentTimeMillis() - mSecondFingerTimeDown) >= INTERVAL_TO_SHOW_MENU) {
-                                mSecondFingerTimeDown = 0;
-                            }
-                            break;
-                    }
-
-                } else {
-                    if (mGestureRecognizerTimer != null) {
-                        mGestureRecognizerTimer.cancel();
-                    }
-                    mSecondFingerTimeDown = 0;
-                }
-
-                return webView.getView().onTouchEvent(event);
-            });
-        }
+            }
+        };
     }
 }
