@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changes
+- Migrates to AndroidX [RNMT-6236](https://outsystemsrd.atlassian.net/browse/RNMT-6236)
+
+### Removals
+- **BREAKING:** Drops support for apps targeting SDK 28 (Android 9) or lower [RNMT-6236](https://outsystemsrd.atlassian.net/browse/RNMT-6236)
+
 ## [2.6.0]
 ### Additions
 - Adds granular media permissions for Android 13 [RNMT-5590](https://outsystemsrd.atlassian.net/browse/RNMT-5590)
