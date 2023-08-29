@@ -102,15 +102,12 @@ public class OSAppFeedbackListener implements OSECTContainerListener {
     }
 
     public void handleOpenECT(final OSECTProviderAPIHandler apiHandler) {
-        if (this.isAppFeedbackAvailable()) {
+        boolean isAppFeedbackAvailable = this.isAppFeedbackAvailable();
+        if (isAppFeedbackAvailable) {
             this.openECT();
-            if(apiHandler != null) {
-                apiHandler.execute(true);
-            }
-        } else {
-            if(apiHandler != null) {
-                apiHandler.execute(false);
-            }
+        }
+        if (apiHandler != null) {
+            apiHandler.execute(isAppFeedbackAvailable);
         }
     }
 

@@ -121,7 +121,7 @@ public class OSAppFeedback extends CordovaPlugin {
     public void onStart() {
         super.onStart();
         final Activity activity = this.cordova.getActivity();
-        if(activity.getApplicationInfo().targetSdkVersion >= 29) {
+        if (activity.getApplicationInfo().targetSdkVersion >= 29) {
             LocalBroadcastManager.getInstance(activity.getApplicationContext()).registerReceiver(this.broadcastReceiver, new IntentFilter(GESTURE_EVENT));
         }
     }
@@ -135,7 +135,7 @@ public class OSAppFeedback extends CordovaPlugin {
     @Override
     public void onStop() {
         final Activity activity = this.cordova.getActivity();
-        if(activity.getApplicationInfo().targetSdkVersion >= 29) {
+        if (activity.getApplicationInfo().targetSdkVersion >= 29) {
             LocalBroadcastManager.getInstance(activity.getApplicationContext()).unregisterReceiver(this.broadcastReceiver);
         }
         super.onStop();
@@ -143,38 +143,30 @@ public class OSAppFeedback extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
-        if (!inBackground) {
-            if (action.equals("deviceready")) {
-
-                if(defaultHostname == null || defaultHostname.isEmpty()){
-                    defaultHostname = args.getString(0);
-                }
-
-                handleDeviceReady(defaultHostname);
-
-                return true;
-            } else {
-                if (action.equals("isAvailable")) {
-                    handleIsECTAvailable(callbackContext);
-
-                    return true;
-                } else {
-                    if (action.equals("openECT")) {
-                        handleOpenECT(callbackContext);
-
-                        return true;
-                    }
-                }
-            }
-
-            callbackContext.error("Invalid plugin action.");
-            return false;
-        } else {
+        if (inBackground) {
             callbackContext.error("Can't open ECT while in background.");
             return false;
         }
-    }
 
+        switch (action) {
+            case "deviceready":
+                if (defaultHostname == null || defaultHostname.isEmpty()) {
+                    defaultHostname = args.getString(0);
+                }
+                handleDeviceReady(defaultHostname);
+                break;
+            case "isAvailable":
+                handleIsECTAvailable(callbackContext);
+                break;
+            case "openECT":
+                handleOpenECT(callbackContext);
+                break;
+            default:
+                callbackContext.error("Invalid plugin action.");
+                return false;
+        }
+        return true;
+    }
 
     private void handleDeviceReady(String hostname) {
         SystemWebViewEngine webViewEngine = (SystemWebViewEngine) webView.getEngine();
@@ -219,7 +211,7 @@ public class OSAppFeedback extends CordovaPlugin {
         WeakReference<CordovaActivity> hRef;
 
         public GestureRecognizerTimedTask(CordovaActivity activity) {
-            hRef = new WeakReference<CordovaActivity>(activity);
+            hRef = new WeakReference<>(activity);
         }
 
         @Override
@@ -294,7 +286,5 @@ public class OSAppFeedback extends CordovaPlugin {
                 return webView.getView().onTouchEvent(event);
             });
         }
-
     }
-
 }
