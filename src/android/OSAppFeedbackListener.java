@@ -20,11 +20,11 @@ public class OSAppFeedbackListener implements OSECTContainerListener {
     private final String SHAREDPREF_NAME = "com.outsystems.plugins.appfeedback.preferences";
     private final String SHAREDPREF_KEY_SKIP_HELP = "com.outsystems.plugins.appfeedback.key.skiphelp";
 
-    private MobileECTController mobileECTController;
+    private final MobileECTController mobileECTController;
+    private final Context context;
 
     private boolean appFeedbackAvailable;
 
-    private Context context;
 
     public OSAppFeedbackListener(AppCompatActivity activity, ViewGroup mainViewGroup, ViewGroup ectViewGroup, WebView currentWebView, String hostname) {
 

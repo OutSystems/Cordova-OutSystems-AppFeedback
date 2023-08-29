@@ -212,7 +212,7 @@ public class OSAppFeedback extends CordovaPlugin {
 
     private long mSecondFingerTimeDown = 0;
     private Timer mGestureRecognizerTimer;
-    private int INTERVAL_TO_SHOW_MENU = 600;
+    private static final int INTERVAL_TO_SHOW_MENU = 600;
 
     private class GestureRecognizerTimedTask extends TimerTask {
 
