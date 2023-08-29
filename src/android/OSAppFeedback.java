@@ -14,7 +14,6 @@ import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import androidx.core.view.MotionEventCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.outsystems.plugins.broadcaster.interfaces.Event;
@@ -257,7 +256,7 @@ public class OSAppFeedback extends CordovaPlugin {
             };
         } else {
             webView.getView().setOnTouchListener((v, event) -> {
-                int action = MotionEventCompat.getActionMasked(event);
+                int action = event.getActionMasked();
 
                 if (event.getPointerCount() == 2) {
                     switch (action) {
