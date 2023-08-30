@@ -3,32 +3,30 @@ package com.outsystems.plugins.appfeedback;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.outsystems.android.mobileect.MobileECTController;
 import com.outsystems.android.mobileect.api.interfaces.OSECTProviderAPIHandler;
 import com.outsystems.android.mobileect.interfaces.OSECTContainerListener;
-
-import org.apache.cordova.CallbackContext;
 
 public class OSAppFeedbackListener implements OSECTContainerListener {
 
     private final String SHAREDPREF_NAME = "com.outsystems.plugins.appfeedback.preferences";
     private final String SHAREDPREF_KEY_SKIP_HELP = "com.outsystems.plugins.appfeedback.key.skiphelp";
 
-    private MobileECTController mobileECTController;
+    private final MobileECTController mobileECTController;
+    private final Context context;
 
     private boolean appFeedbackAvailable;
 
-    private Context context;
 
-    public OSAppFeedbackListener(Activity activity, ViewGroup mainViewGroup, ViewGroup ectViewGroup, WebView currentWebView, String hostname) {
+    public OSAppFeedbackListener(AppCompatActivity activity, ViewGroup mainViewGroup, ViewGroup ectViewGroup, WebView currentWebView, String hostname) {
 
         this.context = activity;
 
@@ -77,13 +75,8 @@ public class OSAppFeedbackListener implements OSECTContainerListener {
      * Public API for Plugin
      */
 
-    public void handleDeviceReady(){
-        this.mobileECTController.prepareECTData(new OSECTProviderAPIHandler() {
-            @Override
-            public void execute(boolean result) {
-                // Do Nothing
-            }
-        });
+    public void handleDeviceReady() {
+        this.mobileECTController.prepareECTData(result -> { /* Do Nothing */ });
     }
 
     private boolean isNetworkAvailable(Context context) {
@@ -93,40 +86,28 @@ public class OSAppFeedbackListener implements OSECTContainerListener {
     }
 
     public void handleECTAvailable(final OSECTProviderAPIHandler apiHandler) {
-        if(isNetworkAvailable(context)) {
-            mobileECTController.checkECTAvailability(new OSECTProviderAPIHandler() {
-                @Override
-                public void execute(boolean result) {
-                    appFeedbackAvailable = result;
-                    if(apiHandler != null)
-                        apiHandler.execute(result);
-                }
+        if (isNetworkAvailable(context)) {
+            mobileECTController.checkECTAvailability(result -> {
+                appFeedbackAvailable = result;
+                if (apiHandler != null)
+                    apiHandler.execute(result);
             });
         } else {
             AlertDialog.Builder alert = new AlertDialog.Builder(context);
             alert.setTitle("Can't send feedback");
             alert.setMessage("Make sure your device has internet connection and try again.");
-            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-
+            alert.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
             alert.show();
         }
     }
 
     public void handleOpenECT(final OSECTProviderAPIHandler apiHandler) {
-        if (this.isAppFeedbackAvailable()) {
+        boolean isAppFeedbackAvailable = this.isAppFeedbackAvailable();
+        if (isAppFeedbackAvailable) {
             this.openECT();
-            if(apiHandler != null) {
-                apiHandler.execute(true);
-            }
-        } else {
-            if(apiHandler != null) {
-                apiHandler.execute(false);
-            }
+        }
+        if (apiHandler != null) {
+            apiHandler.execute(isAppFeedbackAvailable);
         }
     }
 

@@ -36,8 +36,6 @@
     
     <!-- Gradle script -->
     <framework src="src/android/osappfeedback.gradle" custom="true" type="gradleReference"/>
-    <framework src="com.android.support:appcompat-v7:23.+"/>
-    <framework src="com.android.support:support-v4:23.+"/>
     
     <!-- App Feedback framework -->
     <resource-file src="src/android/MobileECT/MobileECT.aar" target="libs/MobileECT.aar" />
