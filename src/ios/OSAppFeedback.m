@@ -227,7 +227,9 @@ typedef void(^OSECTAvailabilityBlock)(BOOL);
     
     [self.mobileECTController checkECTAvailability:^(BOOL result){
         
-        [self.mobileECTController prepareForViewWillAppear];
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [self.mobileECTController prepareForViewWillAppear];
+        });
         
         self.isECTAvailable = result;
         
@@ -264,7 +266,7 @@ typedef void(^OSECTAvailabilityBlock)(BOOL);
     
     [self.commandDelegate runInBackground:^{
     
-        dispatch_sync(dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
             [self.mobileECTController prepareForViewDidLoad];
         });
     }];
@@ -325,7 +327,9 @@ typedef void(^OSECTAvailabilityBlock)(BOOL);
         if ([[CDVReachability reachabilityForInternetConnection]currentReachabilityStatus] != NotReachable){
             [self checkECTAvailability:^(BOOL result){
                 if(result){
-                    [self handleOpenECT:nil];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self handleOpenECT:nil];
+                    });
                 }
             }];
         }
