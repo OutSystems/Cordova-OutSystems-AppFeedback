@@ -45,27 +45,26 @@
   	<!-- ios -->
     <platform name="ios">
 
-     <!-- Declare Microphone Usage for iOS10+ -->
-     <config-file target="*-Info.plist" parent="NSMicrophoneUsageDescription">
-            <string>We access your microphone to record your feedback.</string>
-     </config-file>               
-               
+      <!-- Declare Microphone Usage for iOS10+ -->
+      <config-file target="*-Info.plist" parent="NSMicrophoneUsageDescription">
+        <string>We access your microphone to record your feedback.</string>
+      </config-file>               
+
     	<dependency id="cordova-plugin-screen-orientation@1.4.2" />
 
-        <config-file target="config.xml" parent="/*">
-            <feature name="OSAppFeedback">
-                <param name="ios-package" value="OSAppFeedback"/>
-                <param name="onload" value="true" />
-            </feature>
-        </config-file>
+      <config-file target="config.xml" parent="/*">
+        <feature name="OSAppFeedback">
+          <param name="ios-package" value="OSAppFeedback"/>
+          <param name="onload" value="true" />
+        </feature>
+      </config-file>
 
-        <header-file src="src/ios/OSAppFeedback.h"/>
-        <source-file src="src/ios/OSAppFeedback.m"/>
+      <header-file src="src/ios/OSAppFeedback.h"/>
+      <source-file src="src/ios/OSAppFeedback.m"/>
 
       <!-- App Feedback framework -->
       <framework src="src/ios/OutSystemsMobileECT.xcframework" custom="true" embed="true" />
 
     </platform>
-
 
 </plugin>
