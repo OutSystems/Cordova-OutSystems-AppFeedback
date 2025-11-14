@@ -63,10 +63,7 @@
         <source-file src="src/ios/OSAppFeedback.m"/>
 
       <!-- App Feedback framework -->
-     <framework src="src/ios/MobileECT/OutSystemsMobileECT.framework" custom="true" />
-     <resource-file src="src/ios/MobileECT/OutSystemsMobileECT.bundle"/>
-
-     <hook type="before_plugin_install" src="hooks/ios/before_plugin_install.js"/>
+      <framework src="src/ios/OutSystemsMobileECT.xcframework" custom="true" embed="true" />
 
     </platform>
 
