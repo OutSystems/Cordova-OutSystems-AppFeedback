@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ## [Unreleased]
 ### Changes
 - Migrates to AndroidX [RNMT-6236](https://outsystemsrd.atlassian.net/browse/RNMT-6236)
+- Adds support for iOS 26 [RDMR-951](https://outsystemsrd.atlassian.net/browse/RDMR-951)
 
 ### Removals
 - **BREAKING:** Drops support for apps targeting SDK 28 (Android 9) or lower [RNMT-6236](https://outsystemsrd.atlassian.net/browse/RNMT-6236)
