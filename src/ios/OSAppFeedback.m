@@ -227,7 +227,9 @@ typedef void(^OSECTAvailabilityBlock)(BOOL);
     
     [self.mobileECTController checkECTAvailability:^(BOOL result){
         
-        [self.mobileECTController prepareForViewWillAppear];
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [self.mobileECTController prepareForViewWillAppear];
+        });
         
         self.isECTAvailable = result;
         
@@ -262,13 +264,9 @@ typedef void(^OSECTAvailabilityBlock)(BOOL);
     
     [self.mobileECTController addOnExitEvent:self withSelector:@selector(onExitECT)];
     
-    UIApplication* app = [UIApplication sharedApplication];
-    
-    [self.mobileECTController setStatusBarOffset:!app.isStatusBarHidden];
-    
     [self.commandDelegate runInBackground:^{
     
-        dispatch_sync(dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
             [self.mobileECTController prepareForViewDidLoad];
         });
     }];
@@ -286,7 +284,7 @@ typedef void(^OSECTAvailabilityBlock)(BOOL);
         [self lockToCurrentOrientation];
         
         [self.mobileECTController openECTNativeUI];
-        [_mobileECTView setHidden:NO];
+        [self.mobileECTView setHidden:NO];
     };
     
     if ([NSThread isMainThread])
@@ -306,7 +304,7 @@ typedef void(^OSECTAvailabilityBlock)(BOOL);
 -(void)onExitECT{
     dispatch_async(dispatch_get_main_queue(), ^{
         [self unlockOrientation];
-        [_mobileECTView setHidden:YES];
+        [self.mobileECTView setHidden:YES];
         NSUserDefaults* userDefaults = [NSUserDefaults standardUserDefaults];
         [userDefaults setBool:YES forKey:@"OSAPPFEEDBACK_ECT_SKIP_HELPER"];
     });
@@ -329,20 +327,23 @@ typedef void(^OSECTAvailabilityBlock)(BOOL);
         if ([[CDVReachability reachabilityForInternetConnection]currentReachabilityStatus] != NotReachable){
             [self checkECTAvailability:^(BOOL result){
                 if(result){
-                    [self handleOpenECT:nil];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self handleOpenECT:nil];
+                    });
                 }
             }];
         }
         else{
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Can't send feedback"
-                                                            message:@"Make sure your device has internet connection and try again."
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil, nil];
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Can't send feedback"
+                                                                           message:@"Make sure your device has internet connection and try again."
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
             
-            [alert show];
+            [alert addAction:[UIAlertAction actionWithTitle:@"OK"
+                                                      style:UIAlertActionStyleDefault
+                                                    handler:nil]];
+            
+            [self.viewController presentViewController:alert animated:YES completion:nil];
         }
-        
     }
 }
 
