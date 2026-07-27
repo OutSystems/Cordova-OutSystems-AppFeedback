@@ -7,7 +7,7 @@
 
 #import "OSAppFeedback.h"
 #import "CDVReachability.h"
-#import "YoikScreenOrientation.h"
+#import "CDVViewController+OSAppFeedbackOrientation.h"
 
 NSString* const kAppFeedbackDefaultHostname = @"DefaultHostname";
 NSString* const kAppFeedbackDefaultHandler = @"DefaultAppFeedbackHandler";
@@ -20,6 +20,7 @@ NSString* const kAppFeedbackDefaultHandler = @"DefaultAppFeedbackHandler";
 @property (nonatomic) BOOL hasSettings;
 @property (nonatomic) BOOL isECTAvailable;
 @property (nonatomic) BOOL defaultHandler;
+@property (strong, nonatomic) NSArray *originalSupportedOrientations;
 
 @end
 
@@ -156,57 +157,81 @@ NSString* const kAppFeedbackDefaultHandler = @"DefaultAppFeedbackHandler";
 
 
 -(void)lockToCurrentOrientation {
-    
-    // Lock orientation
-    
-    NSString *orientation;
+
+    CDVViewController* vc = (CDVViewController *) self.viewController;
+
+    // Check if the view controller responds to the methods we need
+    if (![vc respondsToSelector:@selector(supportedOrientations)] ||
+        ![vc respondsToSelector:@selector(setSupportedOrientations:)]) {
+        // View controller doesn't support dynamic orientation changes
+        NSLog(@"[AppFeedback] View controller does not support dynamic orientation locking");
+        return;
+    }
+
+    // Save original orientations if not already saved
+    if(self.originalSupportedOrientations == nil) {
+        self.originalSupportedOrientations = [vc supportedOrientations];
+    }
+
+    // Determine current orientation and lock to it
+    NSArray *orientationsToLock;
     switch ([[UIDevice currentDevice] orientation]) {
         case UIDeviceOrientationLandscapeLeft:
-            orientation = @"landscape-secondary";
+            orientationsToLock = @[@(UIInterfaceOrientationLandscapeLeft)];
             break;
         case UIDeviceOrientationLandscapeRight:
-            orientation = @"landscape-primary";
+            orientationsToLock = @[@(UIInterfaceOrientationLandscapeRight)];
             break;
         case UIDeviceOrientationPortrait:
-            orientation = @"portrait-primary";
+            orientationsToLock = @[@(UIInterfaceOrientationPortrait)];
             break;
         case UIDeviceOrientationPortraitUpsideDown:
-            orientation = @"portrait-secondary";
+            orientationsToLock = @[@(UIInterfaceOrientationPortraitUpsideDown)];
             break;
         default:
-            orientation = @"portrait";
+            // Default to portrait if orientation is unknown
+            orientationsToLock = @[@(UIInterfaceOrientationPortrait)];
+            break;
     }
-    
-    CDVViewController* vc = (CDVViewController *) self.viewController;
-    
-    YoikScreenOrientation* screenOrientationPlugin = (YoikScreenOrientation*)[vc getCommandInstance:@"YoikScreenOrientation"];
-    
-    NSArray* args = [NSArray arrayWithObjects:@"set", orientation, nil];
-    
-    CDVInvokedUrlCommand* orientationCommand = [[CDVInvokedUrlCommand alloc] initWithArguments:args
-                                                                                    callbackId:@"INVALID"
-                                                                                     className:@"YoikScreenOrientation"
-                                                                                    methodName:@"screenOrientation"];
-    
-    
-    [screenOrientationPlugin screenOrientation:orientationCommand];
-    
+
+    [vc setSupportedOrientations:orientationsToLock];
+
+    // Force iOS to re-evaluate supported orientations
+    if (@available(iOS 16.0, *)) {
+        [vc setNeedsUpdateOfSupportedInterfaceOrientations];
+    } else {
+        [UIViewController attemptRotationToDeviceOrientation];
+    }
+
 }
 
 -(void)unlockOrientation {
     CDVViewController* vc = (CDVViewController *) self.viewController;
-    
-    YoikScreenOrientation* screenOrientationPlugin = (YoikScreenOrientation*)[vc getCommandInstance:@"YoikScreenOrientation"];
-    
-    NSArray* args = [NSArray arrayWithObjects:@"set", @"unlocked", nil];
-    
-    CDVInvokedUrlCommand* orientationCommand = [[CDVInvokedUrlCommand alloc] initWithArguments:args
-                                                                                    callbackId:@"INVALID"
-                                                                                     className:@"YoikScreenOrientation"
-                                                                                    methodName:@"screenOrientation"];
-    
-    
-    [screenOrientationPlugin screenOrientation:orientationCommand];
+
+    // Check if the view controller responds to the method we need
+    if (![vc respondsToSelector:@selector(setSupportedOrientations:)]) {
+        NSLog(@"[AppFeedback] View controller does not support dynamic orientation unlocking");
+        return;
+    }
+
+    // Restore original orientations or unlock to all if none were saved
+    if(self.originalSupportedOrientations != nil && self.originalSupportedOrientations.count > 0) {
+        [vc setSupportedOrientations:self.originalSupportedOrientations];
+    } else {
+        // Clear the lock by setting to nil/empty - this will make supportedInterfaceOrientations
+        // call the super implementation which returns the default from Info.plist
+        [vc setSupportedOrientations:nil];
+    }
+
+    self.originalSupportedOrientations = nil;
+
+    // Force update the interface orientation
+    if (@available(iOS 16.0, *)) {
+        [vc setNeedsUpdateOfSupportedInterfaceOrientations];
+    } else {
+        // For iOS 15 and below, trigger a rotation update
+        [UIViewController attemptRotationToDeviceOrientation];
+    }
 }
 
 -(void)handleDeviceReady:(NSString*)hostname{
