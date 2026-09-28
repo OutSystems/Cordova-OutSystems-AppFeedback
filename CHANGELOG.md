@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Fixes
 - Fixes crash opening App Feedback on Cordova-iOS 8 [RDMR-1134](https://outsystemsrd.atlassian.net/browse/RDMR-1134)
 - Fixes device orientation not being unlocked after using App Feedback on iOS [RDMR-1134](https://outsystemsrd.atlassian.net/browse/RDMR-1134)
+- Fixes App Feedback screenshot being stretched after rotating the device or resizing the window on iOS [RDMR-1082](https://outsystemsrd.atlassian.net/browse/RDMR-1082)
 
 ## [2.6.0]
 ### Additions
