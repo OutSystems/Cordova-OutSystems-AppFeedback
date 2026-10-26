@@ -6,8 +6,8 @@
 //
 
 #import "OSAppFeedback.h"
-#import "CDVReachability.h"
 #import "CDVViewController+OSAppFeedbackOrientation.h"
+#import <WebKit/WebKit.h>
 
 NSString* const kAppFeedbackDefaultHostname = @"DefaultHostname";
 NSString* const kAppFeedbackDefaultHandler = @"DefaultAppFeedbackHandler";
@@ -379,27 +379,33 @@ typedef void(^OSECTAvailabilityBlock)(BOOL);
 
 -(void)handleOpenGesture:(UILongPressGestureRecognizer*) gestureRecognizer {
     if([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
-        
-        if ([[CDVReachability reachabilityForInternetConnection]currentReachabilityStatus] != NotReachable){
-            [self checkECTAvailability:^(BOOL result){
-                if(result){
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self handleOpenECT:nil];
-                    });
-                }
-            }];
-        }
-        else{
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Can't send feedback"
-                                                                           message:@"Make sure your device has internet connection and try again."
-                                                                    preferredStyle:UIAlertControllerStyleAlert];
-            
-            [alert addAction:[UIAlertAction actionWithTitle:@"OK"
-                                                      style:UIAlertActionStyleDefault
-                                                    handler:nil]];
-            
-            [self.viewController presentViewController:alert animated:YES completion:nil];
-        }
+
+        WKWebView* webView = (WKWebView*)self.webView;
+
+        [webView evaluateJavaScript:@"navigator.onLine" completionHandler:^(id result, NSError *error) {
+            BOOL online = error ? YES : [result boolValue];
+
+            if (online){
+                [self checkECTAvailability:^(BOOL result){
+                    if(result){
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [self handleOpenECT:nil];
+                        });
+                    }
+                }];
+            }
+            else{
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Can't send feedback"
+                                                                               message:@"Make sure your device has internet connection and try again."
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+
+                [alert addAction:[UIAlertAction actionWithTitle:@"OK"
+                                                          style:UIAlertActionStyleDefault
+                                                        handler:nil]];
+
+                [self.viewController presentViewController:alert animated:YES completion:nil];
+            }
+        }];
     }
 }
 

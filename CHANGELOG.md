@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Removals
 - **BREAKING:** Drops support for apps targeting SDK 28 (Android 9) or lower [RNMT-6236](https://outsystemsrd.atlassian.net/browse/RNMT-6236)
 - Removes the dependency on `cordova-plugin-screen-orientation`, which no longer conflicts with apps that use it directly [RPM-2895](https://outsystemsrd.atlassian.net/browse/RPM-2895)
+- Removes the dependency on `cordova-plugin-network-information`, which broke iOS builds on MABS 13 and overrode `navigator.connection` on Android [RDMR-1602](https://outsystemsrd.atlassian.net/browse/RDMR-1602)
 
 ### Fixes
 - Fixes crash opening App Feedback on Cordova-iOS 8 [RDMR-1134](https://outsystemsrd.atlassian.net/browse/RDMR-1134)
