@@ -13,6 +13,7 @@ import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import androidx.core.os.BundleCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.outsystems.plugins.broadcaster.interfaces.Event;
@@ -185,7 +186,7 @@ public class OSAppFeedback extends CordovaPlugin {
             public void onReceive(Context context, Intent intent) {
                 Bundle extras = intent.getExtras();
                 if (extras != null) {
-                    Event gestureEvent = extras.getParcelable(GESTURE_EVENT);
+                    Event gestureEvent = BundleCompat.getParcelable(extras, GESTURE_EVENT, Event.class);
                     if (gestureEvent != null) {
                         Map<String, String> eventData = gestureEvent.getData();
                         if (eventData != null) {
