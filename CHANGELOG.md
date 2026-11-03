@@ -5,10 +5,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 ### Changes
+- Updates the Android Mobile ECT library: AGP 9.2.1 toolchain, OkHttp instead of android-async-http, Gson 2.13.1 [RDMR-1678](https://outsystemsrd.atlassian.net/browse/RDMR-1678)
+- Replaces deprecated Android APIs (`NetworkInfo`, `Bundle.getParcelable`) [RDMR-1678](https://outsystemsrd.atlassian.net/browse/RDMR-1678)
 - Migrates to AndroidX [RNMT-6236](https://outsystemsrd.atlassian.net/browse/RNMT-6236)
 - Adds support for iOS 26 [RDMR-951](https://outsystemsrd.atlassian.net/browse/RDMR-951)
 
 ### Removals
+- Removes the android-async-http and commons-io dependencies from Android builds [RDMR-1678](https://outsystemsrd.atlassian.net/browse/RDMR-1678)
 - **BREAKING:** Drops support for apps targeting SDK 28 (Android 9) or lower [RNMT-6236](https://outsystemsrd.atlassian.net/browse/RNMT-6236)
 - Removes the dependency on `cordova-plugin-screen-orientation`, which no longer conflicts with apps that use it directly [RPM-2895](https://outsystemsrd.atlassian.net/browse/RPM-2895)
 - Removes the dependency on `cordova-plugin-network-information`, which broke iOS builds on MABS 13 and overrode `navigator.connection` on Android [RDMR-1602](https://outsystemsrd.atlassian.net/browse/RDMR-1602)
