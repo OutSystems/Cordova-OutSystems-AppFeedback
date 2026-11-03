@@ -32,7 +32,9 @@
     <source-file src="src/android/OSAppFeedback.java" target-dir="src/com/outsystems/plugins/appfeedback"/>
     <source-file src="src/android/OSAppFeedbackListener.java" target-dir="src/com/outsystems/plugins/appfeedback"/>
     
-    <!-- Gradle script -->
+    <!-- Gradle script. Besides its own dependencies, the Android code relies on what the OutSystems shell
+         provides: AndroidX AppCompat and androidx.core (CordovaLib), LocalBroadcastManager and the
+         Broadcaster plugin's com.outsystems.plugins.broadcaster.interfaces.Event (cordova-outsystems-core). -->
     <framework src="src/android/osappfeedback.gradle" custom="true" type="gradleReference"/>
     
     <!-- App Feedback framework -->

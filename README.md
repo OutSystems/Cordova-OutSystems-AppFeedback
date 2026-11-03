@@ -21,7 +21,9 @@ When apps that include App Feedback are built in MABS, the plugin is included au
 
 ### Android
 
-...
+The Android code depends on the shell for AndroidX AppCompat and androidx.core (CordovaLib), `androidx.localbroadcastmanager` and the Broadcaster plugin's `Event` class (both from `cordova-outsystems-core`).
+
+To update the Mobile ECT library used by the plugin, build `MobileECT.aar` from the [outsystems-appfeedback-android-sdk](https://github.com/OutSystems/outsystems-appfeedback-android-sdk) repository (`./gradlew :MobileECT:assembleRelease`, JDK 21) and replace `src/android/MobileECT/MobileECT.aar` with `MobileECT/build/outputs/aar/MobileECT-release.aar`. The AAR is added through `flatDir`, which carries no POM: if the library's dependencies change, update `src/android/osappfeedback.gradle` to match.
 
 ### iOS
 
