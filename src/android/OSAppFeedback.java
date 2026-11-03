@@ -106,8 +106,11 @@ public class OSAppFeedback extends CordovaPlugin {
     @Override
     public void onStart() {
         super.onStart();
-        final Activity activity = this.cordova.getActivity();
-        LocalBroadcastManager.getInstance(activity.getApplicationContext()).registerReceiver(this.broadcastReceiver, new IntentFilter(GESTURE_EVENT));
+        // The receiver only exists when DefaultAppFeedbackHandler is on.
+        if (this.broadcastReceiver != null) {
+            final Activity activity = this.cordova.getActivity();
+            LocalBroadcastManager.getInstance(activity.getApplicationContext()).registerReceiver(this.broadcastReceiver, new IntentFilter(GESTURE_EVENT));
+        }
     }
 
     @Override
@@ -118,8 +121,10 @@ public class OSAppFeedback extends CordovaPlugin {
 
     @Override
     public void onStop() {
-        final Activity activity = this.cordova.getActivity();
-        LocalBroadcastManager.getInstance(activity.getApplicationContext()).unregisterReceiver(this.broadcastReceiver);
+        if (this.broadcastReceiver != null) {
+            final Activity activity = this.cordova.getActivity();
+            LocalBroadcastManager.getInstance(activity.getApplicationContext()).unregisterReceiver(this.broadcastReceiver);
+        }
         super.onStop();
     }
 
