@@ -5,7 +5,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 
@@ -68,7 +69,7 @@ public class OSAppFeedbackListener implements OSECTContainerListener {
         SharedPreferences sharedPref = this.context.getSharedPreferences(SHAREDPREF_NAME, Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean(SHAREDPREF_KEY_SKIP_HELP, true);
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -81,8 +82,12 @@ public class OSAppFeedbackListener implements OSECTContainerListener {
 
     private boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+        Network activeNetwork = connectivityManager.getActiveNetwork();
+        if (activeNetwork == null) {
+            return false;
+        }
+        NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(activeNetwork);
+        return capabilities != null && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET);
     }
 
     public void handleECTAvailable(final OSECTProviderAPIHandler apiHandler) {

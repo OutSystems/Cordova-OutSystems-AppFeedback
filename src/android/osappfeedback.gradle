@@ -7,15 +7,9 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.loopj.android:android-async-http:1.4.11'
-    implementation 'com.google.code.gson:gson:2.10.1'
-    implementation 'commons-io:commons-io:1.3.2'
+    // MobileECT.aar is added through flatDir, which carries no POM, so its dependencies are declared
+    // here. AndroidX AppCompat (and androidx.core) comes from CordovaLib.
+    implementation 'com.google.code.gson:gson:2.13.1'
+    implementation 'com.squareup.okhttp3:okhttp:4.11.0'
     implementation(name: 'MobileECT', ext: 'aar')
-}
-
-android {
-    packagingOptions {
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/LICENSE'
-    }
 }

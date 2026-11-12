@@ -13,6 +13,7 @@ import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import androidx.core.os.BundleCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.outsystems.plugins.broadcaster.interfaces.Event;
@@ -105,8 +106,11 @@ public class OSAppFeedback extends CordovaPlugin {
     @Override
     public void onStart() {
         super.onStart();
-        final Activity activity = this.cordova.getActivity();
-        LocalBroadcastManager.getInstance(activity.getApplicationContext()).registerReceiver(this.broadcastReceiver, new IntentFilter(GESTURE_EVENT));
+        // The receiver only exists when DefaultAppFeedbackHandler is on.
+        if (this.broadcastReceiver != null) {
+            final Activity activity = this.cordova.getActivity();
+            LocalBroadcastManager.getInstance(activity.getApplicationContext()).registerReceiver(this.broadcastReceiver, new IntentFilter(GESTURE_EVENT));
+        }
     }
 
     @Override
@@ -117,8 +121,10 @@ public class OSAppFeedback extends CordovaPlugin {
 
     @Override
     public void onStop() {
-        final Activity activity = this.cordova.getActivity();
-        LocalBroadcastManager.getInstance(activity.getApplicationContext()).unregisterReceiver(this.broadcastReceiver);
+        if (this.broadcastReceiver != null) {
+            final Activity activity = this.cordova.getActivity();
+            LocalBroadcastManager.getInstance(activity.getApplicationContext()).unregisterReceiver(this.broadcastReceiver);
+        }
         super.onStop();
     }
 
@@ -185,7 +191,7 @@ public class OSAppFeedback extends CordovaPlugin {
             public void onReceive(Context context, Intent intent) {
                 Bundle extras = intent.getExtras();
                 if (extras != null) {
-                    Event gestureEvent = extras.getParcelable(GESTURE_EVENT);
+                    Event gestureEvent = BundleCompat.getParcelable(extras, GESTURE_EVENT, Event.class);
                     if (gestureEvent != null) {
                         Map<String, String> eventData = gestureEvent.getData();
                         if (eventData != null) {
